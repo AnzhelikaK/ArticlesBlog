@@ -14,7 +14,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -28,7 +28,7 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", insertable = false, updatable = false)
     private Date created_at;
 
     @Enumerated(EnumType.STRING)
@@ -41,6 +41,7 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
 
-
+//    @OneToMany(mappedBy = "articles", fetch = FetchType.LAZY)
+//    List<Article> articles;
 }
 
