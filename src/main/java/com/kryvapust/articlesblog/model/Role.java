@@ -12,22 +12,22 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "name")
-    private String name;
+    private Integer id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private Status status;
+    @Column(name = "name")
+    private RoleName name;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<User> users;
-// ???? нужно ли
+
+    // ???? нужно ли
     @Override
     public String toString() {
         return "Role{" +
                 "id: " + getId() + ", " +
                 "name: " + name + "}";
     }
+
+
 }
