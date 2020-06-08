@@ -24,7 +24,7 @@ public class AccountController {
         this.userMapper = userMapper;
     }
 
-    @PostMapping(value ="/registration")
+    @PostMapping(value = "/registration")
     public ResponseEntity createAccount(@RequestBody UserDto requestUserDto) {
         User result = userMapper.getUser(requestUserDto);
         userService.register(result);

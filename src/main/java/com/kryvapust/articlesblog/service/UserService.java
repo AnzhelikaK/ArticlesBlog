@@ -9,8 +9,8 @@ public interface UserService {
     User register(User user);
 
     List<User> getAll();
-// в примере было username
-    User findByEmail(String username);
+
+    User findByEmail(String email);
 
     User findById(Integer id);
 

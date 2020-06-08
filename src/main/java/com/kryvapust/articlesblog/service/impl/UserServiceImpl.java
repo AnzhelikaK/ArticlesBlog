@@ -60,9 +60,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByEmail(String username) {
-        User result = userRepository.findByEmail(username);
-        log.info("IN findByUsername - user: {} found by username: {}", result, username);
+    public User findByEmail(String email) {
+        User result = userRepository.findByEmail(email);
+        log.info("IN findByUsername - user: {} found by username: {}", result, email);
         return result;
     }
 
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
             return null;
         }
 
-        log.info("IN findById - user: {} found by id: {}", result);
+        log.info("IN findById - user: {} found by id: {}", result, id);
         return result;
     }
 

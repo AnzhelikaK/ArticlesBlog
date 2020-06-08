@@ -7,6 +7,7 @@ import com.kryvapust.articlesblog.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,6 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private static final String USER_ENDPOINT = "/articlesBlog/user/**";
+    private static final String CREATE_ARTICLE_ENDPOINT = "/articlesBlog/articles";
     private static final String LOGIN_ENDPOINT = "/articlesBlog/login";
     private static final String REGISTRATION_ENDPOINT = "/articlesBlog/account/registration";
 
@@ -39,9 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET, CREATE_ARTICLE_ENDPOINT).permitAll()
+                .antMatchers(HttpMethod.POST, CREATE_ARTICLE_ENDPOINT).hasRole(SecurityRoleName.USER.name())
                 .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT).permitAll()
                 .antMatchers(USER_ENDPOINT).hasRole(SecurityRoleName.USER.name())
-
+                .antMatchers("/articlesBlog/articles/**").hasRole(SecurityRoleName.USER.name())
                 .anyRequest().permitAll()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));  // это значит что каждый post запрос проходит через jwt токен
