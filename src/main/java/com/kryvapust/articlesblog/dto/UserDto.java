@@ -13,5 +13,5 @@ public class UserDto {
     private String lastName;
     private String password;
     private String email;
-    private Date created_at; //?
+    private Date created;
 }

@@ -29,7 +29,7 @@ public class User {
     private String email;
 
     @Column(name = "created_at", insertable = false, updatable = false)
-    private Date created_at;
+    private Date created;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

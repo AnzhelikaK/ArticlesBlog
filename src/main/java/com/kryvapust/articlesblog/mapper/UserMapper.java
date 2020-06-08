@@ -22,7 +22,7 @@ public class UserMapper {
         userDto.setLastName(user.getLastName());
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
-        userDto.setCreated_at(user.getCreated_at());
+        userDto.setCreated(user.getCreated());
         return userDto;
     }
 }

@@ -7,15 +7,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArticleMapper {
     public Article getArticle(ArticleDto articleDto) {
-        Article article = new Article();
-        article.setTitle(articleDto.getTitle());
-        article.setText(articleDto.getText());
-        return article;
+        return Article.builder()
+                .setTitle(articleDto.getTitle())
+                .setText(articleDto.getText())
+                .build();
     }
 
     public ArticleDto getArticleDto(Article article) {
-        ArticleDto articleDto = ArticleDto.builder().setId().build();
-
-        return articleDto;
+        return ArticleDto.builder()
+                .setId(article.getId())
+                .setTitle(article.getTitle())
+                .setText(article.getText())
+                .setStatus(article.getStatus())
+                .setUserName(article.getUser().getFirstName())
+                .setCreated(article.getCreated())
+                .setUpdated(article.getUpdated())
+                .build();
     }
 }
