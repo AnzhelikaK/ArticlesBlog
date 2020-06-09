@@ -1,6 +1,8 @@
 package com.kryvapust.articlesblog.model;
 
+import com.kryvapust.articlesblog.model.enums.UserStatus;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,6 +12,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "users")
+@ToString(includeFieldNames = false, onlyExplicitlyIncluded = true)
 public class User {
 
     @Id
@@ -17,9 +20,11 @@ public class User {
     private Integer id;
 
     @Column(name = "first_name")
+    @ToString.Include
     private String firstName;
 
     @Column(name = "last_name")
+    @ToString.Include
     private String lastName;
 
     @Column(name = "password")
@@ -40,6 +45,10 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 
 //    @OneToMany(mappedBy = "articles", fetch = FetchType.LAZY)
 //    List<Article> articles;

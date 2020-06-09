@@ -3,7 +3,7 @@ package com.kryvapust.articlesblog.service.impl;
 import com.kryvapust.articlesblog.dto.ArticleDto;
 import com.kryvapust.articlesblog.mapper.ArticleMapper;
 import com.kryvapust.articlesblog.model.Article;
-import com.kryvapust.articlesblog.model.ArticleStatus;
+import com.kryvapust.articlesblog.model.enums.ArticleStatus;
 import com.kryvapust.articlesblog.model.User;
 import com.kryvapust.articlesblog.repository.ArticleRepository;
 import com.kryvapust.articlesblog.service.ArticleService;

@@ -1,7 +1,7 @@
 package com.kryvapust.articlesblog.security.jwt;
 
 import com.kryvapust.articlesblog.model.Role;
-import com.kryvapust.articlesblog.model.UserStatus;
+import com.kryvapust.articlesblog.model.enums.UserStatus;
 import com.kryvapust.articlesblog.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

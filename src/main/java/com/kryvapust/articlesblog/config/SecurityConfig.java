@@ -1,7 +1,6 @@
 package com.kryvapust.articlesblog.config;
 
-import com.kryvapust.articlesblog.model.RoleName;
-import com.kryvapust.articlesblog.model.SecurityRoleName;
+import com.kryvapust.articlesblog.model.enums.SecurityRoleName;
 import com.kryvapust.articlesblog.security.jwt.JwtConfigurer;
 import com.kryvapust.articlesblog.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;

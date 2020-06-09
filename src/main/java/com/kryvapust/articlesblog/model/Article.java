@@ -1,5 +1,6 @@
 package com.kryvapust.articlesblog.model;
 
+import com.kryvapust.articlesblog.model.enums.ArticleStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -8,10 +9,11 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Table(name = "articles")
 @Builder(setterPrefix = "set")
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Table(name = "articles")
 public class Article {
 
     @Id
@@ -29,7 +31,7 @@ public class Article {
     private ArticleStatus status;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "author")
+    @JoinColumn(name = "author",insertable = false, updatable = false)
     private User user;
 
     @Column(name = "created_at", insertable = false, updatable = false)
