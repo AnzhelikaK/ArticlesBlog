@@ -3,7 +3,7 @@ create table articles
 	id int auto_increment,
 	title varchar(255) default 'title' null,
 	text text null,
-	status varchar(255) null,
+	status varchar(255) default 'DRAFT' not null,
 	author int null,
 	created datetime default current_timestamp not null,
 	updated datetime default current_timestamp not null ON UPDATE current_timestamp,

@@ -29,7 +29,8 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleMapper.getArticle(articleDto);
         User user = userService.findById(userId);
         article.setUser(user);
-        article.setStatus(ArticleStatus.PUBLIC);
+        //?????? можно ли без проверки на null
+        if(articleDto.getStatus()==null) {article.setStatus(ArticleStatus.DRAFT);}
         Article createdArticle = articleRepository.save(article);
         return createdArticle;
     }
