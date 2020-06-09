@@ -10,6 +10,7 @@ public class ArticleMapper {
         return Article.builder()
                 .setTitle(articleDto.getTitle())
                 .setText(articleDto.getText())
+                .setStatus(articleDto.getStatus())
                 .build();
     }
 
