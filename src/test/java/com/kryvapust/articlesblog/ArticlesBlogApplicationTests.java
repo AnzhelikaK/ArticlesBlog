@@ -1,6 +1,6 @@
 package com.kryvapust.articlesblog;
 
-import com.kryvapust.articlesblog.model.RoleName;
+import com.kryvapust.articlesblog.model.enums.RoleName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

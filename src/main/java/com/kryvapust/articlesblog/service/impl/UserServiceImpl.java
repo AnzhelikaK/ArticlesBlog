@@ -1,8 +1,8 @@
 package com.kryvapust.articlesblog.service.impl;
 
 import com.kryvapust.articlesblog.model.Role;
-import com.kryvapust.articlesblog.model.RoleName;
-import com.kryvapust.articlesblog.model.UserStatus;
+import com.kryvapust.articlesblog.model.enums.RoleName;
+import com.kryvapust.articlesblog.model.enums.UserStatus;
 import com.kryvapust.articlesblog.model.User;
 import com.kryvapust.articlesblog.repository.RoleRepository;
 import com.kryvapust.articlesblog.repository.UserRepository;

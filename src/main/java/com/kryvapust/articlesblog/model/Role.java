@@ -1,5 +1,6 @@
 package com.kryvapust.articlesblog.model;
 
+import com.kryvapust.articlesblog.model.enums.RoleName;
 import lombok.Data;
 
 import javax.persistence.*;

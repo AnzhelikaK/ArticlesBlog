@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@RestController
 @AllArgsConstructor
+
+@RestController
 @RequestMapping(value = "/articlesBlog")
 public class ArticleController {
     JwtTokenProvider jwtTokenProvider;

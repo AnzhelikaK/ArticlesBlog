@@ -1,4 +1,4 @@
-package com.kryvapust.articlesblog.model;
+package com.kryvapust.articlesblog.model.enums;
 
 public enum RoleName {
     ROLE_ADMIN,

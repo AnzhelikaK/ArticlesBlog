@@ -20,7 +20,7 @@ public class ArticleMapper {
                 .setTitle(article.getTitle())
                 .setText(article.getText())
                 .setStatus(article.getStatus())
-                .setUserName(article.getUser().getFirstName())
+                .setAuthor(article.getUser().getFullName())
                 .setCreated(article.getCreated())
                 .setUpdated(article.getUpdated())
                 .build();
