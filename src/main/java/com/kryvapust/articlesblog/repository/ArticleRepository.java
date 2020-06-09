@@ -16,7 +16,15 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     @Modifying
     @Transactional
     @Query("update Article set status='DELETED' where id=:articleId and user.id=:userId")
-    void deleteById(@Param("articleId") Integer articleId, @Param("userId") Integer userId);
+    Integer deleteById(@Param("articleId") Integer articleId, @Param("userId") Integer userId);
+
+//    @Modifying
+//    @Transactional
+//    @Query("update Article a set a.title=:article.title, text=:article.text, status=:article.status where id=:articleId")
+//    Article update(@Param("articleId") Integer articleId, @Param("article") Article article);
+
+
+
+
 }
 
-//update articles set status='DELETED' where id=19;

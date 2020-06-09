@@ -1,7 +1,6 @@
 package com.kryvapust.articlesblog.model;
 
 import lombok.*;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,7 +15,7 @@ import java.util.Date;
 public class Article {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "title")
@@ -27,7 +26,7 @@ public class Article {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private ArticleStatus status;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author")

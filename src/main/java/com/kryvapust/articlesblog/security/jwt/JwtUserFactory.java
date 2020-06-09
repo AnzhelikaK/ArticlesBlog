@@ -1,7 +1,7 @@
 package com.kryvapust.articlesblog.security.jwt;
 
 import com.kryvapust.articlesblog.model.Role;
-import com.kryvapust.articlesblog.model.Status;
+import com.kryvapust.articlesblog.model.UserStatus;
 import com.kryvapust.articlesblog.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,8 +22,8 @@ public final class JwtUserFactory {
                 user.getLastName(),
                 user.getPassword(),
                 user.getEmail(),
-                Status.ACTIVE.equals(user.getStatus()),
-                //user.getStatus().equals(Status.ACTIVE),
+                UserStatus.ACTIVE.equals(user.getStatus()),
+                //user.getStatus().equals(UserStatus.ACTIVE),
                 mapToGrantedAuthorities(new ArrayList<>(user.getRoles()))
         );
     }
