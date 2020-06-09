@@ -16,14 +16,13 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping(value = "/articlesBlog")
 public class ArticleController {
-
     JwtTokenProvider jwtTokenProvider;
     ArticleService articleService;
 
     @PostMapping(value = "/articles")
     public ResponseEntity createArticle(HttpServletRequest request, @RequestBody ArticleDto articleDto) {
-        String email = jwtTokenProvider.getUsername(request);
-        Article createdArticle = articleService.add(articleDto, email);
+        Integer userId = jwtTokenProvider.getUserId(request);
+        Article createdArticle = articleService.add(articleDto, userId);
         return ResponseEntity.ok("Article " + createdArticle + " was created.");
     }
 
@@ -40,12 +39,26 @@ public class ArticleController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PutMapping(value = "/articles/{id}")
+    public ResponseEntity editArticle(HttpServletRequest request, @RequestBody ArticleDto articleDto, @PathVariable(name = "id") Integer articleId) {
+        Integer userId = jwtTokenProvider.getUserId(request);
+        boolean result = articleService.editArticle(userId, articleId, articleDto);
+        if (result) {
+            return ResponseEntity.ok("Article " + articleDto.getTitle() + " was edited");
+        }
+        return ResponseEntity.ok("You can't edit this article");
+    }
+
     @DeleteMapping(value = "/articles/{id}")
     public ResponseEntity deleteArticle(HttpServletRequest request, @PathVariable(name = "id") Integer articleId) {
         Integer userId = jwtTokenProvider.getUserId(request);
-        articleService.delete(articleId, userId);
-        return ResponseEntity.ok("Successfully deleted");
+        boolean result = articleService.delete(articleId, userId);
+        if (result) {
+            return ResponseEntity.ok("Successfully deleted");
+        }
+        return ResponseEntity.ok("You can't delete this article");
     }
+
 ////???
 //    @GetMapping(value = "/articles/{id}")
 //    public ResponseEntity<ArticleDto> getArticleById(@PathVariable(name = "id") Integer id) {

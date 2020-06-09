@@ -2,7 +2,7 @@ package com.kryvapust.articlesblog.service.impl;
 
 import com.kryvapust.articlesblog.model.Role;
 import com.kryvapust.articlesblog.model.RoleName;
-import com.kryvapust.articlesblog.model.Status;
+import com.kryvapust.articlesblog.model.UserStatus;
 import com.kryvapust.articlesblog.model.User;
 import com.kryvapust.articlesblog.repository.RoleRepository;
 import com.kryvapust.articlesblog.repository.UserRepository;
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(userRoles);
-        user.setStatus(Status.ACTIVE);
+        user.setStatus(UserStatus.ACTIVE);
 
         User registeredUser = userRepository.save(user);
 
