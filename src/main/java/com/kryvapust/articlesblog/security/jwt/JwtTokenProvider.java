@@ -28,7 +28,8 @@ public class JwtTokenProvider {
     @Value("${jwt.token.expired}")
     private long validityInMilliseconds;
 
-    //    @Qualifier("UserDetailsService")
+    //??????
+    @Qualifier("JwtUserDetailsService")
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -37,11 +38,11 @@ public class JwtTokenProvider {
         secret = Base64.getEncoder().encodeToString(secret.getBytes());
     }
 
-    public String createToken(String username, List<Role> roles) {
+    public String createToken(String username, List<Role> roles, Integer id) {
 
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", getRoleNames(roles));
-
+        claims.put("id", id);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
@@ -63,8 +64,13 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(HttpServletRequest req) {
-        String token=resolveToken(req);
+        String token = resolveToken(req);
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public Integer getUserId(HttpServletRequest req) {
+        String token = resolveToken(req);
+        return (Integer) Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("id");
     }
 
     public String resolveToken(HttpServletRequest req) {
