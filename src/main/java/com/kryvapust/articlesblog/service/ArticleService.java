@@ -15,7 +15,7 @@ public interface ArticleService {
 
     ArticleDto findById(Integer id);
 
-    void delete(Integer id);
+    void delete(Integer articleId, Integer userId);
     //    Article edit(ArticleService articleService);
 
 }

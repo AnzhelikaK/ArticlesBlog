@@ -41,8 +41,9 @@ public class ArticleController {
     }
 
     @DeleteMapping(value = "/articles/{id}")
-    public ResponseEntity deleteArticle(@PathVariable(name = "id") Integer id) {
-        articleService.delete(id);
+    public ResponseEntity deleteArticle(HttpServletRequest request, @PathVariable(name = "id") Integer articleId) {
+        Integer userId = jwtTokenProvider.getUserId(request);
+        articleService.delete(articleId, userId);
         return ResponseEntity.ok("Successfully deleted");
     }
 ////???

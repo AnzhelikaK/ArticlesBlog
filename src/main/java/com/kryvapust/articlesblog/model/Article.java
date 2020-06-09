@@ -36,7 +36,6 @@ public class Article {
     @Column(name = "created_at", insertable = false, updatable = false)
     private Date created;
 
-    @LastModifiedDate
     @Column(name = "updated_at", insertable = false, updatable = false)
     private Date updated;
 
