@@ -12,13 +12,19 @@ import com.kryvapust.articlesblog.service.ArticleService;
 import com.kryvapust.articlesblog.service.CommentService;
 import com.kryvapust.articlesblog.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
     CommentRepository commentRepository;
     CommentMapper commentMapper;
+    ArticleRepository articleRepository;
 
     @Override
     public void add(CommentDto commentDto, Integer userId, Integer articleId) {
@@ -27,4 +33,18 @@ public class CommentServiceImpl implements CommentService {
         comment.setUserId(userId);
         commentRepository.save(comment);
     }
+
+    @Override
+    public List<CommentDto> getAllByArticle(Integer articleId) {
+        List<Comment> byArticle = commentRepository.findAll(takeCommentExample(articleId));
+        return byArticle.stream().map(commentMapper::getCommentDto).collect(Collectors.toList());
+        // ? or return through variable
+    }
+
+    private Example<Comment> takeCommentExample(Integer articleId) {
+        Comment comment = Comment.builder().setArticleId(articleId).build();
+        return Example.of(comment);
+
+    }
+
 }

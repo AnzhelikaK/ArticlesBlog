@@ -9,8 +9,8 @@ import java.util.Date;
 @Setter
 @Entity
 @Builder(setterPrefix = "set")
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor  // для поиска в БД через Entity Article
+@AllArgsConstructor
 
 @Table(name = "comments")
 public class Comment {
