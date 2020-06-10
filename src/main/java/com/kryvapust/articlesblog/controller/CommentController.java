@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -44,5 +45,13 @@ public class CommentController {
         CommentDto result = commentService.getOne(commentId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    // удалить только автор комментария или поста
 
+    @DeleteMapping(value = "/{commentId}")
+    public ResponseEntity deleteComment(HttpServletRequest request,
+                                        @PathVariable Integer commentId) {
+        Integer userId = jwtTokenProvider.getUserId(request);
+       String result= commentService.delete(commentId, userId);
+        return ResponseEntity.ok(result);
+    }
 }
