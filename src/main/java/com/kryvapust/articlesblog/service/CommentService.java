@@ -9,4 +9,5 @@ public interface CommentService {
     void add(CommentDto commentDto, Integer userId, Integer articleId);
     List<CommentDto> getAllByArticle(Integer articleId);
     CommentDto getOne(Integer commentId);
+    String delete(Integer commentId, Integer userId);
 }

@@ -48,7 +48,20 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto getOne(Integer commentId) {
-        Comment comment=commentRepository.findById(commentId).orElse(new Comment());
+        Comment comment = commentRepository.findById(commentId).orElse(new Comment());
         return commentMapper.getCommentDto(comment);
+    }
+
+    @Override
+    public String delete(Integer commentId, Integer userId) {
+        Comment comment = commentRepository.findById(commentId).orElse(new Comment());
+        if (haveRights(comment, userId)) {
+            commentRepository.delete(comment);
+            return "Comment was deleted. It doesn't exist anymore in the DB - hard deleting.";
+        } else return "You can't delete this comment";
+    }
+
+    private boolean haveRights(Comment comment, Integer userId) {
+        return userId.equals(comment.getUserId()) || userId.equals(comment.getArticle().getUser().getId());
     }
 }
