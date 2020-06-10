@@ -32,10 +32,17 @@ public class CommentController {
     // +- ? Comments
     // доступен для всех пользователей(в задании не сказано четко)
     @GetMapping
-    public ResponseEntity<List<CommentDto>> getAllCommentsFromArticle(@PathVariable(name = "articleId") Integer articleId) {
+    //getAllCommentsByArticle
+    public ResponseEntity<List<CommentDto>> getAllComments(@PathVariable(name = "articleId") Integer articleId) {
         List<CommentDto> result = commentService.getAllByArticle(articleId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // ? доступно для всех пользователей. Возможно сделать доступным только для authentication
+    @GetMapping(value = "/{commentId}")
+    public ResponseEntity<CommentDto> getOneComment(@PathVariable Integer commentId) {
+        CommentDto result = commentService.getOne(commentId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
 }
