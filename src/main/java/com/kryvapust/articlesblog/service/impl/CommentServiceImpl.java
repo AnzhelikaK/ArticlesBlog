@@ -18,20 +18,13 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
     CommentRepository commentRepository;
-    // ? или искать через Service
-    UserRepository userRepository;
-    ArticleRepository articleRepository;
     CommentMapper commentMapper;
 
     @Override
     public void add(CommentDto commentDto, Integer userId, Integer articleId) {
-        // ? Не жирно ли два раза в БД ходить чтобы сущности достать и сохранить
-        // проверить правильно ли я сохраняю модель - нужно ли заполнять
-        User user=userRepository.findById(userId).orElse(null);
-        Article article=articleRepository.findById(articleId).orElse(null);
         Comment comment = commentMapper.getComment(commentDto);
-        comment.setArticle(article);
-        comment.setUser(user);
+        comment.setArticleId(articleId);
+        comment.setUserId(userId);
         commentRepository.save(comment);
     }
 }

@@ -22,12 +22,18 @@ public class Comment {
     private String message;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", insertable = false, updatable = false)
     private Article article;
 
+    @Column(name = "post_id")
+    private Integer articleId;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", insertable = false, updatable = false)
     private User user;
+
+    @Column(name = "author_id")
+    private Integer userId;
 
     @Column(name = "created_at", insertable = false)
     private Date created;

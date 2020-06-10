@@ -10,6 +10,7 @@ import com.kryvapust.articlesblog.service.ArticleService;
 import com.kryvapust.articlesblog.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,16 +31,24 @@ public class ArticleServiceImpl implements ArticleService {
         User user = userService.findById(userId);
         article.setUser(user);
         //?????? можно ли без проверки на null
-        if(articleDto.getStatus()==null) {article.setStatus(ArticleStatus.DRAFT);}
+        if (articleDto.getStatus() == null) {
+            article.setStatus(ArticleStatus.DRAFT);
+        }
         Article createdArticle = articleRepository.save(article);
         return createdArticle;
     }
 
     @Override
     public List<ArticleDto> getAll() {
-        List<Article> articles = articleRepository.findAll();
-        List<ArticleDto> result = articles.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
+        List<Article> article2s = articleRepository.findAll(takePublicArticle());
+        List<ArticleDto> result = article2s.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
         return result;
+    }
+// Название метода, возможно переделать
+    private Example<Article> takePublicArticle(){
+        Article articleExample = Article.builder().setStatus(ArticleStatus.PUBLIC).build();
+        Example<Article> example = Example.of(articleExample);
+        return example;
     }
 
 //    @Override

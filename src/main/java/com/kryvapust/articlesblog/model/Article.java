@@ -31,7 +31,7 @@ public class Article {
     private ArticleStatus status;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "author",insertable = false, updatable = false)
+    @JoinColumn(name = "author")
     private User user;
 
     @Column(name = "created_at", insertable = false, updatable = false)
