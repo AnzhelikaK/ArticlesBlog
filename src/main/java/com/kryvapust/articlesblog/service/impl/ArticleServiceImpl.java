@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,15 +41,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<ArticleDto> getAll() {
-        List<Article> article2s = articleRepository.findAll(takePublicArticle());
-        List<ArticleDto> result = article2s.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
-        return result;
-    }
-// Название метода, возможно переделать
-    private Example<Article> takePublicArticle(){
-        Article articleExample = Article.builder().setStatus(ArticleStatus.PUBLIC).build();
-        Example<Article> example = Example.of(articleExample);
-        return example;
+        //     List<Article> article2s = articleRepository.findAll(takeArticleExample(ArticleStatus.PUBLIC));
+        List<Article> byStatus = articleRepository.findByStatus(ArticleStatus.PUBLIC);
+        return byStatus.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
     }
 
 //    @Override
@@ -72,6 +67,7 @@ public class ArticleServiceImpl implements ArticleService {
         List<ArticleDto> result = articles.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
         return result;
     }
+
 
     @Override
     // нужно ли бросать ошибку, если пользователь не тот
