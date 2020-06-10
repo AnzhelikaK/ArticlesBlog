@@ -44,7 +44,11 @@ public class CommentServiceImpl implements CommentService {
     private Example<Comment> takeCommentExample(Integer articleId) {
         Comment comment = Comment.builder().setArticleId(articleId).build();
         return Example.of(comment);
-
     }
 
+    @Override
+    public CommentDto getOne(Integer commentId) {
+        Comment comment=commentRepository.findById(commentId).orElse(new Comment());
+        return commentMapper.getCommentDto(comment);
+    }
 }
