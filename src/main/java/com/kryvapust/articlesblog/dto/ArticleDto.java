@@ -9,19 +9,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.Set;
 
 @Setter
 @Getter
 @Builder(setterPrefix = "set")
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ArticleDto {
-   private Integer id;
+    private Integer id;
     private String title;
     private String text;
     private ArticleStatus status;
     private String author;
     private Date created;
     private Date updated;
+    private Set<String> tags;
 }
 
 
