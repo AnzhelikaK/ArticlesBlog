@@ -60,7 +60,6 @@ public class CommentServiceImpl implements CommentService {
             return "Comment was deleted. It doesn't exist anymore in the DB - hard deleting.";
         } else return "You can't delete this comment";
     }
-
     private boolean haveRights(Comment comment, Integer userId) {
         return userId.equals(comment.getUserId()) || userId.equals(comment.getArticle().getUser().getId());
     }

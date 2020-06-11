@@ -11,7 +11,7 @@ public interface ArticleService {
 
     List<ArticleDto> getAll();
 
-    List<ArticleDto> findAllByUser(String email);
+    List<ArticleDto> getAllByUser(String email);
 
  //  ArticleDto findById(Integer id);
 

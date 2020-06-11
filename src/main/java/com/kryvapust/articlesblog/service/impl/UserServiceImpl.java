@@ -34,13 +34,8 @@ public class UserServiceImpl implements UserService {
     public User register(User user) {
 
         Role roleUser = roleRepository.findByName(RoleName.ROLE_USER);
-//        Role role=new Role();
-//        role.setName(RoleName.TEST);
-//        roleRepository.save(role);
-//        roleRepository.exists(role);
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(roleUser);
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(userRoles);
         user.setStatus(UserStatus.ACTIVE);
@@ -60,14 +55,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByEmail(String email) {
+    public User getByEmail(String email) {
         User result = userRepository.findByEmail(email);
         log.info("IN findByUsername - user: {} found by username: {}", result, email);
         return result;
     }
 
     @Override
-    public User findById(Integer id) {
+    public User getById(Integer id) {
         User result = userRepository.findById(id).orElse(null);
 
         if (result == null) {

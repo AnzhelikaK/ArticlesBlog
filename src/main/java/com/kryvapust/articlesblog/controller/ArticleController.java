@@ -36,7 +36,7 @@ public class ArticleController {
     @GetMapping(value = "/articles/my")
     public ResponseEntity<List<ArticleDto>> getAllByUser(HttpServletRequest request) {
         String email = jwtTokenProvider.getUsername(request);
-        List<ArticleDto> result = articleService.findAllByUser(email);
+        List<ArticleDto> result = articleService.getAllByUser(email);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
