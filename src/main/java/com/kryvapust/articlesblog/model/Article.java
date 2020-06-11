@@ -5,14 +5,15 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
-@Entity
 @Builder(setterPrefix = "set")
 @NoArgsConstructor
 @AllArgsConstructor
 
+@Entity
 @Table(name = "articles")
 public class Article {
 
@@ -39,6 +40,12 @@ public class Article {
 
     @Column(name = "updated_at", insertable = false, updatable = false)
     private Date updated;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "articles_tags",
+            joinColumns = {@JoinColumn(name = "article_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")})
+    private Set<Tag> tags;
 
     @Override
     public String toString() {

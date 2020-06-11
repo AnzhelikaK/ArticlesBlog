@@ -3,9 +3,11 @@ package com.kryvapust.articlesblog.service.impl;
 import com.kryvapust.articlesblog.dto.ArticleDto;
 import com.kryvapust.articlesblog.mapper.ArticleMapper;
 import com.kryvapust.articlesblog.model.Article;
+import com.kryvapust.articlesblog.model.Tag;
 import com.kryvapust.articlesblog.model.enums.ArticleStatus;
 import com.kryvapust.articlesblog.model.User;
 import com.kryvapust.articlesblog.repository.ArticleRepository;
+import com.kryvapust.articlesblog.repository.TagRepository;
 import com.kryvapust.articlesblog.service.ArticleService;
 import com.kryvapust.articlesblog.service.UserService;
 import lombok.AllArgsConstructor;
@@ -13,30 +15,58 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
-    private final int SUCCESSFULLY_DELETED = 1;
-    ArticleRepository articleRepository;
-    UserService userService;
-    ArticleMapper articleMapper;
+    private static final int SUCCESSFULLY_DELETED = 1;
+    private final ArticleRepository articleRepository;
+    private final UserService userService;
+    private final ArticleMapper articleMapper;
+    private final TagRepository tagRepository;
 
     @Override
     public Article add(ArticleDto articleDto, Integer userId) {
         Article article = articleMapper.getArticle(articleDto);
         User user = userService.findById(userId);
         article.setUser(user);
-        //?????? можно ли без проверки на null
         if (articleDto.getStatus() == null) {
             article.setStatus(ArticleStatus.DRAFT);
         }
+        Set<Tag> tags = saveUniqueTagsAndReturnAll(articleDto.getTags());
+        article.setTags(tags);
         Article createdArticle = articleRepository.save(article);
         return createdArticle;
+    }
+
+    private Set<Tag> saveUniqueTagsAndReturnAll(Set<String> tags) {
+        HashSet<Tag> tagsFromDB = new HashSet<>();
+        if (tags != null) {
+            for (String t : tags) {
+                Tag tag1 = tagRepository.findByName(t);
+                if (tag1 != null) {
+                    tagsFromDB.add(tag1);
+                } else {
+
+                    tagsFromDB.add(tagRepository.save(new Tag(t)));
+                }
+            }
+        }
+
+//        Iterator<String> tagsIter = tags.iterator();
+//        while (tagsIter.hasNext()) {
+//            String t = tagsIter.next();
+//            Tag tag1 = tagRepository.findByName(t);
+//            if (tag1 != null) {
+//                tagsFromDB.add(tag1);
+//            } else {
+//                tagsFromDB.add(tagRepository.saveAndFlush(new Tag(t)));
+//            }
+//        }
+        return tagsFromDB;
     }
 
     @Override

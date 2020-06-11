@@ -10,9 +10,10 @@ import java.util.List;
 
 // заменить Data на другие
 @Data
+@ToString(includeFieldNames = false, onlyExplicitlyIncluded = true)
+
 @Entity
 @Table(name = "users")
-@ToString(includeFieldNames = false, onlyExplicitlyIncluded = true)
 public class User {
 
     @Id

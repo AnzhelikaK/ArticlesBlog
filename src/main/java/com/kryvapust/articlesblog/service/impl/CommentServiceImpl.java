@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
-    CommentRepository commentRepository;
-    CommentMapper commentMapper;
-    ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
+    private final CommentMapper commentMapper;
+    private final ArticleRepository articleRepository;
 
     @Override
     public void add(CommentDto commentDto, Integer userId, Integer articleId) {
