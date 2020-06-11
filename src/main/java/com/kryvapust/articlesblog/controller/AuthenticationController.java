@@ -40,7 +40,7 @@ public class AuthenticationController {
         try {
             String email = requestDto.getEmail();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
-            User user = userService.findByEmail(email);
+            User user = userService.getByEmail(email);
 
             if (user == null) {
                 throw new UsernameNotFoundException("User with email: " + email + " not found");

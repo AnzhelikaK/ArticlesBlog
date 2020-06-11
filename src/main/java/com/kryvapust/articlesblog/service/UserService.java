@@ -10,9 +10,9 @@ public interface UserService {
 
     List<User> getAll();
 
-    User findByEmail(String email);
+    User getByEmail(String email);
 
-    User findById(Integer id);
+    User getById(Integer id);
 
     void delete(Integer id);
 }
