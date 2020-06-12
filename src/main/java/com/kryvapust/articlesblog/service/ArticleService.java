@@ -3,13 +3,15 @@ package com.kryvapust.articlesblog.service;
 import com.kryvapust.articlesblog.dto.ArticleDto;
 import com.kryvapust.articlesblog.model.Article;
 import com.kryvapust.articlesblog.model.User;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ArticleService {
     Article add(ArticleDto articleDto, Integer userId);
 
-    List<ArticleDto> getAll();
+    List<ArticleDto> getAll(Pageable page);
 
     List<ArticleDto> getAllByUser(String email);
 

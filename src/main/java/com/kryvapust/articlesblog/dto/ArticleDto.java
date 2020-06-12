@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.kryvapust.articlesblog.model.enums.ArticleStatus;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.Set;
@@ -16,6 +14,8 @@ import java.util.Set;
 @Builder(setterPrefix = "set")
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class ArticleDto {
     private Integer id;
     private String title;
