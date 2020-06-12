@@ -1,6 +1,7 @@
 package com.kryvapust.articlesblog.controller;
 
 import com.kryvapust.articlesblog.dto.ArticleDto;
+import com.kryvapust.articlesblog.dto.SearchDto;
 import com.kryvapust.articlesblog.model.Article;
 import com.kryvapust.articlesblog.security.jwt.JwtTokenProvider;
 import com.kryvapust.articlesblog.service.ArticleService;
@@ -34,10 +35,29 @@ public class ArticleController {
 
 
     @GetMapping(value = "/articles")
-    public ResponseEntity<List<ArticleDto>> getAll(@ModelAttribute Pageable pageable) {
-        List<ArticleDto> result = articleService.getAll(pageable);
+    public ResponseEntity<List<ArticleDto>> getAll(@RequestParam(value = "skip", required = false) Integer skip,
+                                                   @RequestParam(value = "limit", required = false) Integer limit,
+                                                   @RequestParam(value = "q", required = false) String postTitle,
+                                                   @RequestParam(value = "author", required = false) Integer authorId,
+                                                   @RequestParam(value = "sort", required = false) String sort,
+                                                   @RequestParam(value = "order", required = false) String order) {
+        SearchDto searchDto = SearchDto.builder()
+                .setSkip(skip)
+                .setLimit(limit)
+                .setPostTitle(postTitle)
+                .setAuthorId(authorId)
+                .setSort(sort)
+                .setOrder(order)
+                .build();
+        List<ArticleDto> result = articleService.getAll(searchDto);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+//    @ModelAttribute
+//    public Pageable page(@RequestParam(value = "skip", required = false) Integer skip,
+//                         @RequestParam(value = "limit", required = false) Integer limit) {
+//        return PageRequest.of(skip, limit);
+//    }
 
     @GetMapping(value = "/articles/my")
     public ResponseEntity<List<ArticleDto>> getAllByUser(HttpServletRequest request) {
@@ -47,7 +67,9 @@ public class ArticleController {
     }
 
     @PutMapping(value = "/articles/{id}")
-    public ResponseEntity editArticle(HttpServletRequest request, @RequestBody ArticleDto articleDto, @PathVariable(name = "id") Integer articleId) {
+    public ResponseEntity editArticle(HttpServletRequest request,
+                                      @RequestBody ArticleDto articleDto,
+                                      @PathVariable(name = "id") Integer articleId) {
         Integer userId = jwtTokenProvider.getUserId(request);
         boolean result = articleService.editArticle(userId, articleId, articleDto);
         if (result) {
@@ -64,13 +86,6 @@ public class ArticleController {
             return ResponseEntity.ok("Successfully deleted");
         }
         return ResponseEntity.ok("You can't delete this article");
-    }
-
-    @ModelAttribute
-    public Pageable page(@RequestParam(value = "skip", required = false) Integer skip,
-                         @RequestParam(value = "limit", required = false) Integer limit) {
-        return PageRequest.of(skip, limit);
-
     }
 
 ////???
