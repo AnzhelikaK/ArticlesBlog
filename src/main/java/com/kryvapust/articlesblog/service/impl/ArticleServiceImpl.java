@@ -12,6 +12,8 @@ import com.kryvapust.articlesblog.service.TagService;
 import com.kryvapust.articlesblog.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -42,8 +44,9 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleDto> getAll() {
-        List<Article> byStatus = articleRepository.findByStatus(ArticleStatus.PUBLIC);
+    public List<ArticleDto> getAll(Pageable page) {
+
+        List<Article> byStatus = articleRepository.findByStatus(ArticleStatus.PUBLIC, page);
         return byStatus.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
     }
 

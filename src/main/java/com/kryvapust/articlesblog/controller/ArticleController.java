@@ -5,11 +5,16 @@ import com.kryvapust.articlesblog.model.Article;
 import com.kryvapust.articlesblog.security.jwt.JwtTokenProvider;
 import com.kryvapust.articlesblog.service.ArticleService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 @AllArgsConstructor
@@ -27,9 +32,10 @@ public class ArticleController {
         return ResponseEntity.ok("Article " + createdArticle + " was created.");
     }
 
+
     @GetMapping(value = "/articles")
-    public ResponseEntity<List<ArticleDto>> getAll() {
-        List<ArticleDto> result = articleService.getAll();
+    public ResponseEntity<List<ArticleDto>> getAll(@ModelAttribute Pageable pageable) {
+        List<ArticleDto> result = articleService.getAll(pageable);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -58,6 +64,13 @@ public class ArticleController {
             return ResponseEntity.ok("Successfully deleted");
         }
         return ResponseEntity.ok("You can't delete this article");
+    }
+
+    @ModelAttribute
+    public Pageable page(@RequestParam(value = "skip", required = false) Integer skip,
+                         @RequestParam(value = "limit", required = false) Integer limit) {
+        return PageRequest.of(skip, limit);
+
     }
 
 ////???
