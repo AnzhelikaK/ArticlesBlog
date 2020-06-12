@@ -1,11 +1,15 @@
 package com.kryvapust.articlesblog.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 
-@Data
+@Setter
+@Getter
+@Builder(setterPrefix = "set")
+
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
     private Integer id;

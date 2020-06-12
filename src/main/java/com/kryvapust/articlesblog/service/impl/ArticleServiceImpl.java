@@ -1,6 +1,7 @@
 package com.kryvapust.articlesblog.service.impl;
 
 import com.kryvapust.articlesblog.dto.ArticleDto;
+import com.kryvapust.articlesblog.dto.SearchDto;
 import com.kryvapust.articlesblog.mapper.ArticleMapper;
 import com.kryvapust.articlesblog.model.Article;
 import com.kryvapust.articlesblog.model.Tag;
@@ -12,10 +13,13 @@ import com.kryvapust.articlesblog.service.TagService;
 import com.kryvapust.articlesblog.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,6 +32,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final UserService userService;
     private final ArticleMapper articleMapper;
     private final TagService tagService;
+    private final EntityManager entityManager;
 
     @Override
     public Article add(ArticleDto articleDto, Integer userId) {
@@ -44,10 +49,62 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleDto> getAll(Pageable page) {
+    public List<ArticleDto> getAll(SearchDto searchDto) {
+        int limit = 100;
+        int offset = 0;
+        if (searchDto.getLimit() != null) {
+            if (searchDto.getLimit() < 100 && searchDto.getLimit() > 0) {
+                limit = searchDto.getLimit();
+            }
+        }
+        if (searchDto.getSkip() != null) {
+            if (searchDto.getSkip() >= 0) {
+                offset = searchDto.getSkip() * limit;
+            }
+        }
+        String ASC_DIRECTION = "asc";
 
-        List<Article> byStatus = articleRepository.findByStatus(ArticleStatus.PUBLIC, page);
-        return byStatus.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Article> criteriaQuery = criteriaBuilder.createQuery(Article.class);
+        Root<Article> articleRoot = criteriaQuery.from(Article.class);
+        Predicate criteria = criteriaBuilder.conjunction();
+
+        if (searchDto.getPostTitle() != null) {
+            Predicate title = criteriaBuilder.equal(articleRoot.get("title"), searchDto.getPostTitle());
+            criteria = criteriaBuilder.and(criteria, title);
+        }
+        if (searchDto.getAuthorId() != null) {
+            Predicate user = criteriaBuilder.equal(articleRoot.get("user"), User.builder().setId(searchDto.getAuthorId()).build());
+            criteria = criteriaBuilder.and(criteria, user);
+        }
+
+        Predicate status = criteriaBuilder.equal(articleRoot.get("status"), ArticleStatus.PUBLIC);
+        criteria = criteriaBuilder.and(criteria, status);
+
+
+        String sortBy = "title";
+        if (searchDto.getSort() != null) {
+            sortBy = searchDto.getSort();
+        }
+        String order = "asc";
+        if (searchDto.getOrder() != null) {
+            order = searchDto.getOrder().toLowerCase();
+        }
+        if (ASC_DIRECTION.equals(order)) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(articleRoot.get(sortBy)));
+        } else criteriaQuery.orderBy(criteriaBuilder.desc(articleRoot.get(sortBy)));
+
+        criteriaQuery.select(articleRoot).where(criteria);
+        List<Article> articles = entityManager
+                .createQuery(criteriaQuery)
+                .setMaxResults(limit)
+                .setFirstResult(offset)
+                .getResultList();
+        return articles.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
+
+//        List<Article> byStatus = articleRepository.findByStatus(ArticleStatus.PUBLIC, page);
+//        return byStatus.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
+
     }
 
     @Override

@@ -10,8 +10,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder(setterPrefix = "set")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@AllArgsConstructor
 
 @Entity
 @Table(name = "articles")

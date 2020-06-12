@@ -1,16 +1,19 @@
 package com.kryvapust.articlesblog.model;
 
 import com.kryvapust.articlesblog.model.enums.UserStatus;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 // заменить Data на другие
-@Data
+@Setter
+@Getter
 @ToString(includeFieldNames = false, onlyExplicitlyIncluded = true)
+@Builder(setterPrefix = "set")
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 
 @Entity
 @Table(name = "users")
