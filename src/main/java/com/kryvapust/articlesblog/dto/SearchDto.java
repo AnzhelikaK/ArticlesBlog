@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.PositiveOrZero;
+
 @Setter
 @Getter
 @Builder(setterPrefix = "set")
@@ -13,8 +16,8 @@ import lombok.Setter;
 public class SearchDto {
     private Integer skip;
     private Integer limit;
-    private String postTitle;
-    private Integer authorId;
-    private String sort;
+    private String searchKeyTitle;
+    private Integer searchKeyAuthorId;
+    private String sortBy;
     private String order;
 }

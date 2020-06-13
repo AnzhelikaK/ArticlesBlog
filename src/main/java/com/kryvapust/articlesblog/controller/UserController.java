@@ -7,10 +7,7 @@ import com.kryvapust.articlesblog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/articlesBlog/user")
@@ -33,4 +30,11 @@ public class UserController {
         UserDto result = userMapper.getUserDto(user);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity delete(@PathVariable(name = "id") Integer id) {
+        userService.delete(id);
+        return ResponseEntity.ok("User was successfully deleted.");
+    }
+
 }
