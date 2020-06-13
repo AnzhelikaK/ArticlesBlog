@@ -1,6 +1,7 @@
 package com.kryvapust.articlesblog.service.impl;
 
 import com.kryvapust.articlesblog.dto.ArticleDto;
+import com.kryvapust.articlesblog.dto.PageDto;
 import com.kryvapust.articlesblog.dto.SearchDto;
 import com.kryvapust.articlesblog.mapper.ArticleMapper;
 import com.kryvapust.articlesblog.model.Article;
@@ -27,12 +28,14 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
-    private static final int SUCCESSFULLY_DELETED = 1;
     private final ArticleRepository articleRepository;
     private final UserService userService;
     private final ArticleMapper articleMapper;
     private final TagService tagService;
     private final EntityManager entityManager;
+    private static final int SUCCESSFULLY_DELETED = 1;
+    private static final int MAX_DATA_SIZE = 100;
+    private static final String ASC_DIRECTION = "asc";
 
     @Override
     public Article add(ArticleDto articleDto, Integer userId) {
@@ -49,44 +52,53 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleDto> getAll(SearchDto searchDto) {
-        int limit = 100;
+    public PageDto<ArticleDto> getAll(SearchDto searchDto) {
+        int limit = MAX_DATA_SIZE;
         int offset = 0;
-        if (searchDto.getLimit() != null) {
-            if (searchDto.getLimit() < 100 && searchDto.getLimit() > 0) {
+
+        if (searchDto.getLimit() != null && searchDto.getLimit() > 0) {
+            if (searchDto.getLimit() < MAX_DATA_SIZE) {
                 limit = searchDto.getLimit();
             }
         }
-        if (searchDto.getSkip() != null) {
-            if (searchDto.getSkip() >= 0) {
-                offset = searchDto.getSkip() * limit;
-            }
+        if (searchDto.getSkip() != null && searchDto.getSkip() >= 0) {
+            offset = searchDto.getSkip();
         }
-        String ASC_DIRECTION = "asc";
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
+        // creation CriteriaQuery for looking up
         CriteriaQuery<Article> criteriaQuery = criteriaBuilder.createQuery(Article.class);
         Root<Article> articleRoot = criteriaQuery.from(Article.class);
         Predicate criteria = criteriaBuilder.conjunction();
 
-        if (searchDto.getPostTitle() != null) {
-            Predicate title = criteriaBuilder.equal(articleRoot.get("title"), searchDto.getPostTitle());
-            criteria = criteriaBuilder.and(criteria, title);
-        }
-        if (searchDto.getAuthorId() != null) {
-            Predicate user = criteriaBuilder.equal(articleRoot.get("user"), User.builder().setId(searchDto.getAuthorId()).build());
-            criteria = criteriaBuilder.and(criteria, user);
+        // creation CriteriaQuery for counting size of selection
+        CriteriaQuery<Long> criteriaQueryCount = criteriaBuilder.createQuery(Long.class);
+        Root<Article> articleRootCount = criteriaQueryCount.from(Article.class);
+
+        // set in parameters for looking up
+        if (searchDto.getSearchKeyTitle() != null) {
+            String searchKeyTitle = "%" + searchDto.getSearchKeyTitle() + "%";
+            Predicate criteriaByTitle = criteriaBuilder.like(articleRoot.get("title"), searchKeyTitle);
+            criteria = criteriaBuilder.and(criteria, criteriaByTitle);
         }
 
-        Predicate status = criteriaBuilder.equal(articleRoot.get("status"), ArticleStatus.PUBLIC);
-        criteria = criteriaBuilder.and(criteria, status);
-
-
-        String sortBy = "title";
-        if (searchDto.getSort() != null) {
-            sortBy = searchDto.getSort();
+        if (searchDto.getSearchKeyAuthorId() != null) {
+            User searchKeyAuthor = User.builder().setId(searchDto.getSearchKeyAuthorId()).build();
+            Predicate criteriaByUser = criteriaBuilder.equal(articleRoot.get("user"), searchKeyAuthor);
+            criteria = criteriaBuilder.and(criteria, criteriaByUser);
         }
-        String order = "asc";
+
+        Predicate criteriaByStatus = criteriaBuilder.equal(articleRoot.get("status"), ArticleStatus.PUBLIC);
+        criteria = criteriaBuilder.and(criteria, criteriaByStatus);
+
+        // set in parameters for sorting and order
+        String sortBy = "title";  // default value
+        if (searchDto.getSortBy() != null) {
+            sortBy = searchDto.getSortBy();
+        }
+
+        String order = "asc";    // default value
         if (searchDto.getOrder() != null) {
             order = searchDto.getOrder().toLowerCase();
         }
@@ -94,25 +106,28 @@ public class ArticleServiceImpl implements ArticleService {
             criteriaQuery.orderBy(criteriaBuilder.asc(articleRoot.get(sortBy)));
         } else criteriaQuery.orderBy(criteriaBuilder.desc(articleRoot.get(sortBy)));
 
+        // execution query with settings for pagination
         criteriaQuery.select(articleRoot).where(criteria);
         List<Article> articles = entityManager
                 .createQuery(criteriaQuery)
                 .setMaxResults(limit)
                 .setFirstResult(offset)
                 .getResultList();
-        return articles.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
 
-//        List<Article> byStatus = articleRepository.findByStatus(ArticleStatus.PUBLIC, page);
-//        return byStatus.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
+        // execution query for counting size of selection
+        criteriaQueryCount.select(criteriaBuilder.count(articleRootCount)).where(criteria);
+        Long totalNumber = entityManager.createQuery(criteriaQueryCount).getSingleResult();
 
+        // form Page
+        List<ArticleDto> articlesDto = articles.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
+        return new PageDto<>(articlesDto, totalNumber, offset, limit);
     }
 
     @Override
     public List<ArticleDto> getAllByUser(String email) {
         User user = userService.getByEmail(email);
         List<Article> articles = articleRepository.findByUser(user);
-        List<ArticleDto> result = articles.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
-        return result;
+        return articles.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
     }
 
     @Override
@@ -133,7 +148,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public boolean delete(Integer articleId, Integer userId) {
-        Integer result = articleRepository.deleteById(articleId, userId);
+        Integer result = articleRepository.deleteById(articleId, userId, ArticleStatus.DELETED);
         return (result == SUCCESSFULLY_DELETED);
     }
 

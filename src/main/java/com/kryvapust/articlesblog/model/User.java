@@ -10,7 +10,6 @@ import java.util.List;
 // заменить Data на другие
 @Setter
 @Getter
-@ToString(includeFieldNames = false, onlyExplicitlyIncluded = true)
 @Builder(setterPrefix = "set")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -24,11 +23,9 @@ public class User {
     private Integer id;
 
     @Column(name = "first_name")
-    @ToString.Include
     private String firstName;
 
     @Column(name = "last_name")
-    @ToString.Include
     private String lastName;
 
     @Column(name = "password")

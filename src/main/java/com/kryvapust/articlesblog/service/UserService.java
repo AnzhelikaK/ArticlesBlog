@@ -1,14 +1,14 @@
 package com.kryvapust.articlesblog.service;
 
+import com.kryvapust.articlesblog.dto.UserDto;
 import com.kryvapust.articlesblog.model.User;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import java.util.List;
-
+@EnableAspectJAutoProxy
 public interface UserService {
 
-    User register(User user);
-
-    List<User> getAll();
+    void register(UserDto userDto);
 
     User getByEmail(String email);
 

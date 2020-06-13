@@ -1,21 +1,18 @@
 package com.kryvapust.articlesblog.controller;
 
 import com.kryvapust.articlesblog.dto.ArticleDto;
+import com.kryvapust.articlesblog.dto.PageDto;
 import com.kryvapust.articlesblog.dto.SearchDto;
 import com.kryvapust.articlesblog.model.Article;
 import com.kryvapust.articlesblog.security.jwt.JwtTokenProvider;
 import com.kryvapust.articlesblog.service.ArticleService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
-import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 @AllArgsConstructor
@@ -33,23 +30,22 @@ public class ArticleController {
         return ResponseEntity.ok("Article " + createdArticle + " was created.");
     }
 
-
     @GetMapping(value = "/articles")
-    public ResponseEntity<List<ArticleDto>> getAll(@RequestParam(value = "skip", required = false) Integer skip,
-                                                   @RequestParam(value = "limit", required = false) Integer limit,
-                                                   @RequestParam(value = "q", required = false) String postTitle,
-                                                   @RequestParam(value = "author", required = false) Integer authorId,
-                                                   @RequestParam(value = "sort", required = false) String sort,
-                                                   @RequestParam(value = "order", required = false) String order) {
+    public ResponseEntity<PageDto<ArticleDto>> getAll(@RequestParam(value = "skip", required = false) Integer skip,
+                                                      @RequestParam(value = "limit", required = false) Integer limit,
+                                                      @RequestParam(value = "q", required = false) String title,
+                                                      @RequestParam(value = "author", required = false) Integer authorId,
+                                                      @RequestParam(value = "sort", required = false) String sortBy,
+                                                      @RequestParam(value = "order", required = false) String order) {
         SearchDto searchDto = SearchDto.builder()
                 .setSkip(skip)
                 .setLimit(limit)
-                .setPostTitle(postTitle)
-                .setAuthorId(authorId)
-                .setSort(sort)
+                .setSearchKeyTitle(title)
+                .setSearchKeyAuthorId(authorId)
+                .setSortBy(sortBy)
                 .setOrder(order)
                 .build();
-        List<ArticleDto> result = articleService.getAll(searchDto);
+        PageDto<ArticleDto> result = articleService.getAll(searchDto);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
