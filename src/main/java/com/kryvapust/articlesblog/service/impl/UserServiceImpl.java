@@ -1,5 +1,6 @@
 package com.kryvapust.articlesblog.service.impl;
 
+import com.kryvapust.articlesblog.exception.UserRegistrationException;
 import com.kryvapust.articlesblog.dto.UserDto;
 import com.kryvapust.articlesblog.mapper.UserMapper;
 import com.kryvapust.articlesblog.model.Role;
@@ -10,7 +11,6 @@ import com.kryvapust.articlesblog.repository.RoleRepository;
 import com.kryvapust.articlesblog.repository.UserRepository;
 import com.kryvapust.articlesblog.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
-@EnableAspectJAutoProxy
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -28,7 +27,11 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public void register(UserDto userDto) {
+    public void register(UserDto userDto) throws UserRegistrationException {
+        User existUser = userRepository.findByEmail(userDto.getEmail());
+        if (existUser != null) {
+            throw new UserRegistrationException("User already exist with this email.");
+        }
         User user = userMapper.getUser(userDto);
         Role roleUser = roleRepository.findByName(RoleName.ROLE_USER);
         List<Role> userRoles = new ArrayList<>();

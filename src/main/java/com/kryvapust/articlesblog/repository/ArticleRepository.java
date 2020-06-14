@@ -16,6 +16,6 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
     @Modifying
     @Transactional
-    @Query("update Article set status=:status where id=:articleId and user.id=:userId")
+    @Query("UPDATE Article SET status=:status WHERE id=:articleId AND user.id=:userId")
     Integer deleteById(@Param("articleId") Integer articleId, @Param("userId") Integer id, @Param("status") ArticleStatus status);
 }

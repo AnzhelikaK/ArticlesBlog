@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Modifying
     @Transactional
-    @Query("update User set status=:status where id=:id")
+    @Query("UPDATE User SET status=:status WHERE id=:id")
     void deleteById(@Param("id") Integer id, UserStatus status);
 }

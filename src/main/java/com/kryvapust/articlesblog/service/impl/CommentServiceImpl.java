@@ -1,6 +1,6 @@
 package com.kryvapust.articlesblog.service.impl;
 
-import com.kryvapust.articlesblog.Exception.UserDontHaveRightsException;
+import com.kryvapust.articlesblog.exception.UserDontHaveRightsException;
 import com.kryvapust.articlesblog.dto.CommentDto;
 import com.kryvapust.articlesblog.dto.SearchDto;
 import com.kryvapust.articlesblog.mapper.CommentMapper;
@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements CommentService {
-    private final CommentRepository commentRepository;
-    private final CommentMapper commentMapper;
-
     private static final String DESC_DIRECTION = "desc";
     private static final String SORT_BY_DATE = "created";
+
+    private final CommentRepository commentRepository;
+    private final CommentMapper commentMapper;
 
     @Override
     public List<CommentDto> getAllByArticle(Integer articleId, SearchDto searchDto) {
@@ -62,7 +62,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private boolean userHaveRights(Comment comment, Integer userId) {
-        // Condition: Authenticated user ("userId") = Author of comment OR Author of article
         return userId.equals(comment.getUserId()) || userId.equals(comment.getArticle().getUser().getId());
     }
 

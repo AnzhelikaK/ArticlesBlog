@@ -2,7 +2,11 @@ package com.kryvapust.articlesblog.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kryvapust.articlesblog.model.enums.ArticleStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.Set;

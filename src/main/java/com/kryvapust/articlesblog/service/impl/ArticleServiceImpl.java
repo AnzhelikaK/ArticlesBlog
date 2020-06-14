@@ -1,6 +1,6 @@
 package com.kryvapust.articlesblog.service.impl;
 
-import com.kryvapust.articlesblog.Exception.UserDontHaveRightsException;
+import com.kryvapust.articlesblog.exception.UserDontHaveRightsException;
 import com.kryvapust.articlesblog.dto.ArticleDto;
 import com.kryvapust.articlesblog.dto.PageDto;
 import com.kryvapust.articlesblog.dto.SearchDto;
@@ -20,22 +20,23 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
-    private final ArticleRepository articleRepository;
-    private final ArticleMapper articleMapper;
-    private final TagService tagService;
-    private final EntityManager entityManager;
-
     private static final int SUCCESSFULLY_DELETED = 1;
     private static final int MAX_DATA_SIZE = 100;
     private static final String ASC_DIRECTION = "asc";
     private static final String SORT_BY_TITLE = "title";
+
+    private final ArticleRepository articleRepository;
+    private final ArticleMapper articleMapper;
+    private final TagService tagService;
+    private final EntityManager entityManager;
 
     @Override
     public PageDto<ArticleDto> getAll(SearchDto searchDto) {
@@ -151,7 +152,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     private boolean userHaveRights(Integer userId, Integer articleId) {
-        // Condition: Authenticated user ("userId") = Author of article ("articleId")
         Article article = articleRepository.findById(articleId).orElse(null);
         return article != null && article.getUser().getId().equals(userId);
     }

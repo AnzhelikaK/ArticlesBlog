@@ -1,8 +1,12 @@
 package com.kryvapust.articlesblog.security.jwt;
 
-import com.kryvapust.articlesblog.Exception.JwtAuthenticationException;
+import com.kryvapust.articlesblog.exception.JwtAuthenticationException;
 import com.kryvapust.articlesblog.model.Role;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
