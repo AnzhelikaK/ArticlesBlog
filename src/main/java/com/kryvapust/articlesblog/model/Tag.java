@@ -1,6 +1,5 @@
 package com.kryvapust.articlesblog.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,10 +9,10 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 
 @Entity
 @Table(name = "tags")
-@NoArgsConstructor
 public class Tag {
     public Tag(String name) {
         this.name = name;

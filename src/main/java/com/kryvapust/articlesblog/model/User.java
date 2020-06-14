@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-// заменить Data на другие
 @Setter
 @Getter
 @Builder(setterPrefix = "set")
@@ -17,7 +16,6 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -50,8 +48,4 @@ public class User {
     public String getFullName() {
         return firstName + " " + lastName;
     }
-
-//    @OneToMany(mappedBy = "articles", fetch = FetchType.LAZY)
-//    List<Article> articles;
 }
-

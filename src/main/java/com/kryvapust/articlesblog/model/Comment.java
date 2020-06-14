@@ -9,7 +9,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Builder(setterPrefix = "set")
-@NoArgsConstructor  // для поиска в БД через Entity Article
+@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 
 @Table(name = "comments")

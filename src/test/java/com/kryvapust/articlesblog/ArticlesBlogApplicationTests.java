@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class ArticlesBlogApplicationTests {
-
     @Test
     void contextLoads() {
         System.out.println(cut(RoleName.ROLE_USER));
@@ -15,5 +14,4 @@ class ArticlesBlogApplicationTests {
     private String cut(RoleName roleName) {
         return roleName.toString().substring(5);
     }
-
 }

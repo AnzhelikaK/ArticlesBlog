@@ -3,11 +3,9 @@ package com.kryvapust.articlesblog.controller;
 import com.kryvapust.articlesblog.dto.ArticleDto;
 import com.kryvapust.articlesblog.dto.PageDto;
 import com.kryvapust.articlesblog.dto.SearchDto;
-import com.kryvapust.articlesblog.model.Article;
 import com.kryvapust.articlesblog.security.jwt.JwtTokenProvider;
 import com.kryvapust.articlesblog.service.ArticleService;
 import lombok.AllArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,20 +21,13 @@ public class ArticleController {
     JwtTokenProvider jwtTokenProvider;
     ArticleService articleService;
 
-    @PostMapping(value = "/articles")
-    public ResponseEntity createArticle(HttpServletRequest request, @RequestBody ArticleDto articleDto) {
-        Integer userId = jwtTokenProvider.getUserId(request);
-        Article createdArticle = articleService.add(articleDto, userId);
-        return ResponseEntity.ok("Article " + createdArticle + " was created.");
-    }
-
     @GetMapping(value = "/articles")
-    public ResponseEntity<PageDto<ArticleDto>> getAll(@RequestParam(value = "skip", required = false) Integer skip,
-                                                      @RequestParam(value = "limit", required = false) Integer limit,
-                                                      @RequestParam(value = "q", required = false) String title,
-                                                      @RequestParam(value = "author", required = false) Integer authorId,
-                                                      @RequestParam(value = "sort", required = false) String sortBy,
-                                                      @RequestParam(value = "order", required = false) String order) {
+    public ResponseEntity<PageDto<ArticleDto>> getAllArticle(@RequestParam(value = "skip", required = false) Integer skip,
+                                                             @RequestParam(value = "limit", required = false) Integer limit,
+                                                             @RequestParam(value = "q", required = false) String title,
+                                                             @RequestParam(value = "author", required = false) Integer authorId,
+                                                             @RequestParam(value = "sort", required = false) String sortBy,
+                                                             @RequestParam(value = "order", required = false) String order) {
         SearchDto searchDto = SearchDto.builder()
                 .setSkip(skip)
                 .setLimit(limit)
@@ -45,21 +36,23 @@ public class ArticleController {
                 .setSortBy(sortBy)
                 .setOrder(order)
                 .build();
-        PageDto<ArticleDto> result = articleService.getAll(searchDto);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        PageDto<ArticleDto> response = articleService.getAll(searchDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-//    @ModelAttribute
-//    public Pageable page(@RequestParam(value = "skip", required = false) Integer skip,
-//                         @RequestParam(value = "limit", required = false) Integer limit) {
-//        return PageRequest.of(skip, limit);
-//    }
-
     @GetMapping(value = "/articles/my")
-    public ResponseEntity<List<ArticleDto>> getAllByUser(HttpServletRequest request) {
-        String email = jwtTokenProvider.getUsername(request);
-        List<ArticleDto> result = articleService.getAllByUser(email);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponseEntity<List<ArticleDto>> getArticleAllByUser(HttpServletRequest request) {
+        Integer userId = jwtTokenProvider.getUserId(request);
+        List<ArticleDto> response = articleService.getAllByUser(userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/articles")
+    public ResponseEntity createArticle(HttpServletRequest request,
+                                        @RequestBody ArticleDto articleDto) {
+        Integer userId = jwtTokenProvider.getUserId(request);
+        articleService.add(articleDto, userId);
+        return ResponseEntity.ok("Article was created.");
     }
 
     @PutMapping(value = "/articles/{id}")
@@ -67,11 +60,8 @@ public class ArticleController {
                                       @RequestBody ArticleDto articleDto,
                                       @PathVariable(name = "id") Integer articleId) {
         Integer userId = jwtTokenProvider.getUserId(request);
-        boolean result = articleService.editArticle(userId, articleId, articleDto);
-        if (result) {
-            return ResponseEntity.ok("Article " + articleDto.getTitle() + " was edited");
-        }
-        return ResponseEntity.ok("You can't edit this article");
+        articleService.editArticle(userId, articleId, articleDto);
+        return ResponseEntity.ok("Article was edited.");
     }
 
     @DeleteMapping(value = "/articles/{id}")
@@ -79,19 +69,8 @@ public class ArticleController {
         Integer userId = jwtTokenProvider.getUserId(request);
         boolean result = articleService.delete(articleId, userId);
         if (result) {
-            return ResponseEntity.ok("Successfully deleted");
+            return ResponseEntity.ok("Article was successfully deleted.");
         }
-        return ResponseEntity.ok("You can't delete this article");
+        return ResponseEntity.ok("You can't delete this article.");
     }
-
-////???
-//    @GetMapping(value = "/articles/{id}")
-//    public ResponseEntity<ArticleDto> getArticleById(@PathVariable(name = "id") Integer id) {
-//        ArticleDto result=articleService.findById(id);
-//        return new ResponseEntity<>(result, HttpStatus.OK);
-//    }
-
 }
-
-
-

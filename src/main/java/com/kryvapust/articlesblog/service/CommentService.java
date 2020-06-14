@@ -1,13 +1,16 @@
 package com.kryvapust.articlesblog.service;
 
 import com.kryvapust.articlesblog.dto.CommentDto;
-import com.kryvapust.articlesblog.model.Comment;
+import com.kryvapust.articlesblog.dto.SearchDto;
 
 import java.util.List;
 
 public interface CommentService {
-    void add(CommentDto commentDto, Integer userId, Integer articleId);
-    List<CommentDto> getAllByArticle(Integer articleId);
+    List<CommentDto> getAllByArticle(Integer articleId, SearchDto searchDto);
+
     CommentDto getOne(Integer commentId);
-    String delete(Integer commentId, Integer userId);
+
+    void add(CommentDto commentDto, Integer userId, Integer articleId);
+
+    void delete(Integer commentId, Integer userId) throws RuntimeException;
 }

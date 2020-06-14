@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Set;
 
-@Service
 @AllArgsConstructor
+
+@Service
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
 
     @Override
-    public Set<Tag> save(Set<String> inPutTags) {
+    public Set<Tag> add(Set<String> inPutTags) {
         Set<Tag> outPutTag = new HashSet<>();
         if (inPutTags != null) {
             for (String tag : inPutTags) {

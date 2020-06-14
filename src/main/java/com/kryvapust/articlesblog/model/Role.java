@@ -10,7 +10,6 @@ import java.util.List;
 @Entity
 @Table(name = "roles")
 public class Role {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -21,14 +20,4 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<User> users;
-
-    // ???? нужно ли
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id: " + getId() + ", " +
-                "name: " + name + "}";
-    }
-
-
 }

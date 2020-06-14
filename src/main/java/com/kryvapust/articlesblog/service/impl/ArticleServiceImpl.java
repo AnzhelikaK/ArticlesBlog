@@ -1,5 +1,6 @@
 package com.kryvapust.articlesblog.service.impl;
 
+import com.kryvapust.articlesblog.Exception.UserDontHaveRightsException;
 import com.kryvapust.articlesblog.dto.ArticleDto;
 import com.kryvapust.articlesblog.dto.PageDto;
 import com.kryvapust.articlesblog.dto.SearchDto;
@@ -11,9 +12,7 @@ import com.kryvapust.articlesblog.model.User;
 import com.kryvapust.articlesblog.repository.ArticleRepository;
 import com.kryvapust.articlesblog.service.ArticleService;
 import com.kryvapust.articlesblog.service.TagService;
-import com.kryvapust.articlesblog.service.UserService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -24,32 +23,19 @@ import javax.persistence.criteria.Root;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Slf4j
-@Service
 @AllArgsConstructor
+
+@Service
 public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
-    private final UserService userService;
     private final ArticleMapper articleMapper;
     private final TagService tagService;
     private final EntityManager entityManager;
+
     private static final int SUCCESSFULLY_DELETED = 1;
     private static final int MAX_DATA_SIZE = 100;
     private static final String ASC_DIRECTION = "asc";
-
-    @Override
-    public Article add(ArticleDto articleDto, Integer userId) {
-        Article article = articleMapper.getArticle(articleDto);
-        User user = userService.getById(userId);
-        article.setUser(user);
-        if (articleDto.getStatus() == null) {
-            article.setStatus(ArticleStatus.DRAFT);
-        }
-        Set<Tag> articleTags = tagService.save(articleDto.getTags());
-        article.setTags(articleTags);
-        Article createdArticle = articleRepository.save(article);
-        return createdArticle;
-    }
+    private static final String SORT_BY_TITLE = "title";
 
     @Override
     public PageDto<ArticleDto> getAll(SearchDto searchDto) {
@@ -93,12 +79,12 @@ public class ArticleServiceImpl implements ArticleService {
         criteria = criteriaBuilder.and(criteria, criteriaByStatus);
 
         // set in parameters for sorting and order
-        String sortBy = "title";  // default value
+        String sortBy = SORT_BY_TITLE;
         if (searchDto.getSortBy() != null) {
             sortBy = searchDto.getSortBy();
         }
 
-        String order = "asc";    // default value
+        String order = ASC_DIRECTION;
         if (searchDto.getOrder() != null) {
             order = searchDto.getOrder().toLowerCase();
         }
@@ -124,26 +110,36 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleDto> getAllByUser(String email) {
-        User user = userService.getByEmail(email);
+    public List<ArticleDto> getAllByUser(Integer userId) {
+        User user = User.builder().setId(userId).build();
         List<Article> articles = articleRepository.findByUser(user);
         return articles.stream().map(articleMapper::getArticleDto).collect(Collectors.toList());
     }
 
     @Override
-    // нужно ли бросать ошибку, если пользователь не тот
-    // как еще можно делать проверку на тот/не тот юзер
-    public boolean editArticle(Integer userId, Integer articleId, ArticleDto articleDto) {
-        if (checkArticleBelongUser(userId, articleId)) {
-            User user = userService.getById(userId);
+    public void add(ArticleDto articleDto, Integer userId) {
+        Article article = articleMapper.getArticle(articleDto);
+        User user = User.builder().setId(userId).build();
+        article.setUser(user);
+        if (articleDto.getStatus() == null) {
+            article.setStatus(ArticleStatus.DRAFT);
+        }
+        Set<Tag> articleTags = tagService.add(articleDto.getTags());
+        article.setTags(articleTags);
+        articleRepository.save(article);
+    }
+
+    @Override
+    public void editArticle(Integer userId, Integer articleId, ArticleDto articleDto) throws UserDontHaveRightsException {
+        if (userHaveRights(userId, articleId)) {
+            User user = User.builder().setId(userId).build();
             Article updatedArticle = articleMapper.getArticle(articleDto);
             updatedArticle.setUser(user);
             updatedArticle.setId(articleId);
-            //? Можно ли так присваивать значения переменным/
-            updatedArticle = articleRepository.save(updatedArticle);
-            return true;
+            articleRepository.save(updatedArticle);
+        } else {
+            throw new UserDontHaveRightsException("You don't have rights to edit this article.");
         }
-        return false;
     }
 
     @Override
@@ -152,22 +148,9 @@ public class ArticleServiceImpl implements ArticleService {
         return (result == SUCCESSFULLY_DELETED);
     }
 
-    private boolean checkArticleBelongUser(Integer userId, Integer articleId) {
+    private boolean userHaveRights(Integer userId, Integer articleId) {
+        // Condition: Authenticated user ("userId") = Author of article ("articleId")
         Article article = articleRepository.findById(articleId).orElse(null);
-        return article != null && article.getUser().getId() == userId;
+        return article != null && article.getUser().getId().equals(userId);
     }
 }
-
-//    @Override
-//    public ArticleDto findById(Integer id) {
-//        Article result = articleRepository.findById(id).orElse(null);
-//
-//        if (result == null) {
-//            log.warn("IN findById - no Article found by id: {}", id);
-//            return null;
-//        }
-//
-//        log.info("IN findById - Article: {} found by id: {}", result, id);
-//        return articleMapper.getArticleDto(result);
-//
-//    }

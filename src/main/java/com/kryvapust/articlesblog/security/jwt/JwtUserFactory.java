@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public final class JwtUserFactory {
-    //убрать попробовать
     public JwtUserFactory() {
     }
 
@@ -23,7 +22,6 @@ public final class JwtUserFactory {
                 user.getPassword(),
                 user.getEmail(),
                 UserStatus.ACTIVE.equals(user.getStatus()),
-                //user.getStatus().equals(UserStatus.ACTIVE),
                 mapToGrantedAuthorities(new ArrayList<>(user.getRoles()))
         );
     }
@@ -34,5 +32,4 @@ public final class JwtUserFactory {
                         new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
     }
-
 }
