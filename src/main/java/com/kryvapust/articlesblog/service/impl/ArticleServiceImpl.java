@@ -136,6 +136,8 @@ public class ArticleServiceImpl implements ArticleService {
             Article updatedArticle = articleMapper.getArticle(articleDto);
             updatedArticle.setUser(user);
             updatedArticle.setId(articleId);
+            Set<Tag> articleTags = tagService.add(articleDto.getTags());
+            updatedArticle.setTags(articleTags);
             articleRepository.save(updatedArticle);
         } else {
             throw new UserDontHaveRightsException("You don't have rights to edit this article.");
