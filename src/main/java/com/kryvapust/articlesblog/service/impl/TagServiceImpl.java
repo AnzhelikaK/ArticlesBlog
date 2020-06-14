@@ -1,12 +1,15 @@
 package com.kryvapust.articlesblog.service.impl;
 
+import com.kryvapust.articlesblog.dto.CountTagDto;
 import com.kryvapust.articlesblog.model.Tag;
 import com.kryvapust.articlesblog.repository.TagRepository;
 import com.kryvapust.articlesblog.service.TagService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -29,5 +32,17 @@ public class TagServiceImpl implements TagService {
             }
         }
         return outPutTag;
+    }
+
+    public List<CountTagDto> getTagWithNumberArticle() {
+        List<Object[]> countTags = tagRepository.countByArticle();
+        List<CountTagDto> result = new ArrayList<>();
+        countTags.forEach(obj -> {
+            result.add(CountTagDto.builder()
+                    .setTag((String) obj[0])
+                    .setArticleCount((Long) obj[1])
+                    .build());
+        });
+        return result;
     }
 }
