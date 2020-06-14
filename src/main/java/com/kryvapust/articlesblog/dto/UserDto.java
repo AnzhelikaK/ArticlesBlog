@@ -1,7 +1,13 @@
 package com.kryvapust.articlesblog.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.Email;
 import java.util.Date;

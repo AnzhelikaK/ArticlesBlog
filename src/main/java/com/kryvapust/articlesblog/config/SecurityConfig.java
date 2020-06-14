@@ -4,7 +4,6 @@ import com.kryvapust.articlesblog.model.enums.SecurityRoleName;
 import com.kryvapust.articlesblog.security.jwt.JwtConfigurer;
 import com.kryvapust.articlesblog.security.jwt.JwtTokenProvider;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -41,9 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(REGISTRATION_ENDPOINT, LOGIN_ENDPOINT).permitAll()
                 .antMatchers(HttpMethod.GET, VIEW_ALL_ARTICLES_ENDPOINT).permitAll()
                 .antMatchers(HttpMethod.GET, VIEW_ALL_COMMENTS_ENDPOINT).permitAll()
-                .antMatchers(USER_ENDPOINT).hasAnyRole(SecurityRoleName.USER.name(),SecurityRoleName.ADMIN.name())
+                .antMatchers(USER_ENDPOINT).hasAnyRole(SecurityRoleName.USER.name(), SecurityRoleName.ADMIN.name())
                 .anyRequest().authenticated()
                 .and()
-                .apply(new JwtConfigurer(jwtTokenProvider));  // это значит что каждый post запрос проходит через jwt токен
+                .apply(new JwtConfigurer(jwtTokenProvider));
     }
 }

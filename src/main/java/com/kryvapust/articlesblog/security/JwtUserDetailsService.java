@@ -1,7 +1,6 @@
 package com.kryvapust.articlesblog.security;
 
 import com.kryvapust.articlesblog.model.User;
-import com.kryvapust.articlesblog.security.jwt.JwtUser;
 import com.kryvapust.articlesblog.security.jwt.JwtUserFactory;
 import com.kryvapust.articlesblog.service.UserService;
 import lombok.AllArgsConstructor;
