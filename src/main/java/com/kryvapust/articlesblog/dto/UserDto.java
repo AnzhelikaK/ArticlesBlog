@@ -13,9 +13,7 @@ import java.util.Date;
 @Builder(setterPrefix = "set")
 @ToString(includeFieldNames = false, onlyExplicitlyIncluded = true)
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
-
 public class UserDto {
     private Integer id;
 

@@ -11,11 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UserRepository extends JpaRepository<User, Integer> {
     User findByEmail(String email);
 
-
     @Modifying
     @Transactional
     @Query("update User set status=:status where id=:id")
     void deleteById(@Param("id") Integer id, UserStatus status);
-
-
 }

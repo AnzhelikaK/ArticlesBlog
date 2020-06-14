@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-
 public class JwtUser implements UserDetails {
     private final Integer id;
     private final String firstName;
@@ -84,4 +83,3 @@ public class JwtUser implements UserDetails {
         return enabled;
     }
 }
-

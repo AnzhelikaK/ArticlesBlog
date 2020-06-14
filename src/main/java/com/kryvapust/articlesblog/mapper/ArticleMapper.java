@@ -5,10 +5,12 @@ import com.kryvapust.articlesblog.model.Article;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@Component
 @AllArgsConstructor
+
+@Component
 public class ArticleMapper {
     private final TagMapper tagMapper;
+
     public Article getArticle(ArticleDto articleDto) {
         return Article.builder()
                 .setTitle(articleDto.getTitle())
@@ -16,6 +18,7 @@ public class ArticleMapper {
                 .setStatus(articleDto.getStatus())
                 .build();
     }
+
     public ArticleDto getArticleDto(Article article) {
         return ArticleDto.builder()
                 .setId(article.getId())

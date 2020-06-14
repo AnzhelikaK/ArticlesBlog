@@ -5,6 +5,4 @@ public enum RoleName {
     ROLE_USER,
     ROLE_EDITOR,
     ROLE_PUBLISHER
-
-
 }
